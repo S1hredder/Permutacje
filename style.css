@@ -60,16 +60,17 @@ input[type=number]{
   -webkit-user-select: none;
   width: auto;
 }
-
+/*
 .button-23:focus-visible {
   box-shadow: #222222 0 0 0 2px, rgba(255, 255, 255, 0.8) 0 0 0 4px;
   transition: box-shadow .2s;
 }
-
-.button-23:active {
-  background-color: #F7F7F7;
+*/
+.activ , .button-23:hover {
+  background-color: #ada9a9;
   border-color: #000000;
   transform: scale(.96);
+  color:white;
 }
 
 .button-23:disabled {
@@ -86,3 +87,4 @@ input[type=number]{
     align-content: center;
     justify-content: center;
 }
+
