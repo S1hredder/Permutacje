@@ -6,7 +6,7 @@ let buttonActiveG = false;
 
 function click_button_f(){
     
-    const textNodeArray = ["iloczny rozłaczne","rzędy elementów",
+    const textNodeArray = ["iloczyny rozłaczne","rzędy elementów",
     "fg","znak permutacji"]
 
     if(!f_button.classList.contains("activ")){
