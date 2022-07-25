@@ -1,6 +1,9 @@
 const f_button = document.getElementById("f_button");
 const g_button = document.getElementById("g_button");
 
+let buttonActiveF = false;
+let buttonActiveG = false;
+
 function click_button_f(){
     
     const textNodeArray = ["iloczny rozłaczne","rzędy elementów",
@@ -14,17 +17,22 @@ function click_button_f(){
             createButton.appendChild(textNode);
             createButton.setAttribute("id","buttonF"+i);
             document.getElementById("do_button").appendChild(createButton);
-            g_button.classList.remove("activ");
         }
+        buttonActiveF = true;
     }else {
         let removeButton;
         for(let i=0; i<textNodeArray.length; i++){
             removeButton = document.getElementById("buttonF"+i);
-            console.log(removeButton);
             removeButton.parentNode.removeChild(removeButton);
         }
         f_button.classList.remove("activ");
+    }
+    if(g_button.classList.contains("activ")){
         g_button.classList.remove("activ");
+        for(let i=0; i<textNodeArray.length; i++){
+            removeButton = document.getElementById("buttonG"+i);
+            removeButton.parentNode.removeChild(removeButton);
+        }
     }
 }
 
@@ -42,18 +50,57 @@ function click_button_g(){
             createButton.appendChild(textNode);
             createButton.setAttribute("id","buttonG"+i);
             document.getElementById("do_button").appendChild(createButton);
-            f_button.classList.remove("activ");
         }
+        buttonActiveG = true;
     }else {
         let removeButton;
         for(let i=0; i<textNodeArray.length; i++){
             removeButton = document.getElementById("buttonG"+i);
-            console.log(removeButton);
             removeButton.parentNode.removeChild(removeButton);
         }
         g_button.classList.remove("activ");
+    }
+    if(f_button.classList.contains("activ")){
         f_button.classList.remove("activ");
+        for(let i=0; i<textNodeArray.length; i++){
+            removeButton = document.getElementById("buttonF"+i);
+            removeButton.parentNode.removeChild(removeButton);
+        }
     }
 }
 f_button.addEventListener("click",click_button_f);
 g_button.addEventListener("click",click_button_g);
+
+
+function doButton(){
+        const iloczynyRozlaczne = document.getElementById("buttonF0");
+        function iloczyn_number(){
+            const createIlocznynyRozlaczne = document.createElement("input");
+            createIlocznynyRozlaczne.setAttribute("type","text");
+            createIlocznynyRozlaczne.setAttribute("id","liczba");
+            document.getElementById("iloczyn_number").appendChild(createIlocznynyRozlaczne);
+            const createButtonAccept = document.createElement("button");
+            const textButton = document.createTextNode("Oblicz");
+            createButtonAccept.appendChild(textButton);
+            createButtonAccept.setAttribute("id","obliczLiczbe");
+            document.getElementById("iloczyn_number").appendChild(createButtonAccept);
+
+            const obliczLiczbe = document.getElementById("obliczLiczbe");
+            
+            function obliczLiczbeFuncjca(){
+                const obliczLiczbeValue = document.getElementById("liczba").value;
+                console.log(obliczLiczbeValue);
+            }
+                obliczLiczbe.addEventListener("click",obliczLiczbeFuncjca);
+
+        }
+        
+        
+        iloczynyRozlaczne.addEventListener("click",iloczyn_number);
+
+
+}
+
+f_button.addEventListener("click",doButton);
+
+
