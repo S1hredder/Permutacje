@@ -97,7 +97,7 @@ function doButton(){
                 let iloczynyRozlaczneArray = [];
                 let saveNumber = 0;
                 if(liczbaValue === "1"){
-                    for(let i = 0; i<fArray.length;i++){
+                    for(let i = 0,rzad = 0,arrayLength = 0; i<fArray.length;i++){
                         let firstNumber = false;
                         console.log(fArray[i]);
                         for(let j = 1; j<=fArray.length; j++){
@@ -105,42 +105,51 @@ function doButton(){
                                 if(!firstNumber){
                                     saveNumber = i+1;
                                     console.log("saveNumber",saveNumber);
-                                    iloczynyRozlaczneArray.push(i+1);
+                                    iloczynyRozlaczneArray.push([]);
+                                    iloczynyRozlaczneArray[rzad].push(i+1);
                                     firstNumber = true;
                                 }
-                                //console.log(i+1,fArray[i]);
-                                    //console.log(i+1,fArray[fArray[i]]);
 
                                     i = fArray[i]-1;
                                     j = 0;
-                                    iloczynyRozlaczneArray.push(i+1);
+                                    iloczynyRozlaczneArray[rzad].push(i+1);
                                     console.log(i+1);
                                     //removefArray =  fArray.splice(i+1,1);
                                     //console.log(removefArray);
                                     if(i+1 === saveNumber){
                                         console.log("end!!");
-                                        iloczynyRozlaczneArray.pop();
+                                        iloczynyRozlaczneArray[rzad].pop();
                                         console.log(iloczynyRozlaczneArray);
+                                        arrayLength += iloczynyRozlaczneArray[rzad].length;
                                         // found index that wasn't use 
+                                        //znajdź daną liczbe przez filtr jesli nie to weź ten index jutro 27.07.22
                                         let nextIndex = 0;
+                                        rzad++;
                                         for(let g = 0, count = 0; g<fArray.length; g++){
-                                            for(let k = 0; k<iloczynyRozlaczneArray.length;k++){
-                                                if(fArray[g] === iloczynyRozlaczneArray[k]){
-                                                    console.log(fArray[g],true);
-                                                    k = iloczynyRozlaczneArray;
+                                            for(let k = 0; k<iloczynyRozlaczneArray[rzad].length;k++){
+                                                //console.log(fArray[g],iloczynyRozlaczneArray[c][k])
+                                                if(fArray[g] === iloczynyRozlaczneArray[c][k]){
+                                                    console.log(iloczynyRozlaczneArray[c],k,true);
+                                                    k = arrayLength;
                                                     count = 0;
-                                                }else if(count < iloczynyRozlaczneArray.length){
+                                                }else if(count < arrayLength){
                                                     count++;
                                                     nextIndex = g;
                                                 }
+                                                
+                                                console.log("count",count,arrayLength);
+                                                if(count === arrayLength){
+                                                    console.log("essa")
+                                                    g = fArray.length+1;
+                                                }
                                             }
                                         }
-                                        console.log(nextIndex);
+                                        console.log("nextIndex",nextIndex);
                                         i = nextIndex-1;
                                         j = fArray.length+1;
-                                        if(iloczynyRozlaczneArray.length === fArray.length){
-                                            i = fArray.length;
-                                            j = fArray.length;
+                                        if(arrayLength === fArray.length){
+                                            i = fArray.length+1;
+                                            j = fArray.length+1;
                                         }
                                     }
                             }
