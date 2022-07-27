@@ -87,8 +87,8 @@ function doButton(){
             document.getElementById("iloczyn_number").appendChild(createButtonAccept);
 
             const obliczLiczbe = document.getElementById("obliczLiczbe");
-            
             function obliczLiczbeFuncjca(){
+                console.time("obliczLiczbeFuncjca");
                 const liczbaValue = document.getElementById("liczba").value;
                 let fArray = [];
                 for(let i = 1; i<11; i++){
@@ -99,9 +99,9 @@ function doButton(){
                 if(liczbaValue === "1"){
                     for(let i = 0,rzad = 0,arrayLength = 0; i<fArray.length;i++){
                         let firstNumber = false;
-                        console.log(fArray[i]);
-                        for(let j = 1; j<=fArray.length; j++){
-                            if(fArray[i] === j){
+                        for(let up = 1; up<=fArray.length; up++){
+                            console.log("f= ",fArray[i],"up= ",up);
+                            if(fArray[i] === up){
                                 if(!firstNumber){
                                     saveNumber = i+1;
                                     console.log("saveNumber",saveNumber);
@@ -111,47 +111,34 @@ function doButton(){
                                 }
 
                                     i = fArray[i]-1;
-                                    j = 0;
+                                    up = 0;
                                     iloczynyRozlaczneArray[rzad].push(i+1);
-                                    console.log(i+1);
-                                    //removefArray =  fArray.splice(i+1,1);
-                                    //console.log(removefArray);
                                     if(i+1 === saveNumber){
                                         console.log("end!!");
                                         iloczynyRozlaczneArray[rzad].pop();
-                                        console.log(iloczynyRozlaczneArray);
-                                        arrayLength += iloczynyRozlaczneArray[rzad].length;
                                         // found index that wasn't use 
                                         //znajdź daną liczbe przez filtr jesli nie to weź ten index jutro 27.07.22
-                                        let nextIndex = 0;
-                                        rzad++;
-                                        for(let g = 0, count = 0; g<fArray.length; g++){
-                                            for(let k = 0; k<iloczynyRozlaczneArray[rzad].length;k++){
-                                                //console.log(fArray[g],iloczynyRozlaczneArray[c][k])
-                                                if(fArray[g] === iloczynyRozlaczneArray[c][k]){
-                                                    console.log(iloczynyRozlaczneArray[c],k,true);
-                                                    k = arrayLength;
-                                                    count = 0;
-                                                }else if(count < arrayLength){
-                                                    count++;
-                                                    nextIndex = g;
-                                                }
-                                                
-                                                console.log("count",count,arrayLength);
-                                                if(count === arrayLength){
-                                                    console.log("essa")
-                                                    g = fArray.length+1;
-                                                }
+                                        let iloczynyRozlaczneArray1d = [].concat(...iloczynyRozlaczneArray);
+                                        for(let g = 0; g<fArray.length; g++){
+                                        //for(let k = 0; k<iloczynyRozlaczneArray.length; k++){
+                                            const foundNumber = (element) => element === fArray[g];
+                                            if(!iloczynyRozlaczneArray1d.some(foundNumber)){
+                                                console.log("iloczynyRozlaczneArray",iloczynyRozlaczneArray1d,fArray[g]);
+                                                i = g;
+                                                up = g+1;
+                                                g = fArray.length;
+                                                firstNumber = false;
                                             }
-                                        }
-                                        console.log("nextIndex",nextIndex);
-                                        i = nextIndex-1;
-                                        j = fArray.length+1;
-                                        if(arrayLength === fArray.length){
-                                            i = fArray.length+1;
-                                            j = fArray.length+1;
-                                        }
+                                        //
+                                       }
+                                       arrayLength += iloczynyRozlaczneArray[rzad].length;
+                                       if(arrayLength === fArray.length){
+                                        i = fArray.length+1;
+                                        up = fArray.length+1;
                                     }
+                                       rzad++;
+                                    }
+                                    console.log(iloczynyRozlaczneArray);
                             }
                         }
                     }
@@ -160,6 +147,7 @@ function doButton(){
 
 
 
+                console.timeEnd("obliczLiczbeFuncjca");
             }
                 obliczLiczbe.addEventListener("click",obliczLiczbeFuncjca);
                 //obliczLiczbe.addEventListener("click",timer);
