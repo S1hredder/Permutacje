@@ -26,9 +26,9 @@ function click_button_f(){
             removeButton.parentNode.removeChild(removeButton);
         }
         f_button.classList.remove("activ");
-        let inputWynik = document.getElementById("div");
-        if(inputWynik != null){
-            inputWynik.parentNode.removeChild(inputWynik);
+        let divObliczenia = document.getElementById("divObliczenia");
+        if(divObliczenia != null){
+            divObliczenia.parentNode.removeChild(divObliczenia);
         }
     }
     if(g_button.classList.contains("activ")){
@@ -83,14 +83,14 @@ function doButton(){
     const znakPermutacji = document.getElementById("buttonF3");
     let count = 0;
     let countF = [0,0,0,0];
+
     function utworzInputOblicz(elem){
         if(count > 0){
             let divObliczenia = document.getElementById("divObliczenia");
             divObliczenia.parentNode.removeChild(divObliczenia);
             count = 0;
         }
-    
-        const createDiv = document.createElement("divObliczenia")
+        const createDiv = document.createElement("div")
         createDiv.setAttribute("id","divObliczenia");
         document.getElementById("inputWynik").appendChild(createDiv);
         for(let i = 0; i<4; i++){            
@@ -113,7 +113,7 @@ function doButton(){
                 createButtonAccept.appendChild(textButton);
                 createButtonAccept.setAttribute("id","oblicz");
                 document.getElementById("divObliczenia").appendChild(createButtonAccept);
-                //of button if click twice 
+                //off button if click twice 
                 countF[i]++;
                 let filter = countF.filter(element => element === 1);
                 if(filter.length > 1){
@@ -127,10 +127,9 @@ function doButton(){
                     countF.forEach(function(part,index){
                         this[index] = 0;
                     },countF);
-                    let inputWynik = document.getElementById("divObliczenia");
-                    inputWynik.parentNode.removeChild(inputWynik);
+                    let divObliczenia = document.getElementById("divObliczenia");
+                    divObliczenia.parentNode.removeChild(divObliczenia);
                     count = 0;
-                    //console.log("dobrze");
                 }
             }
         }
@@ -138,7 +137,7 @@ function doButton(){
 
     }
 
-    function utworzArray(){
+    let utworzArray =() =>{
         let fArray = [];
         for(let i = 1; i<11; i++){
             fArray.push(parseInt(document.getElementById("f"+i).value));
@@ -152,11 +151,10 @@ function doButton(){
         for(let i = 0,rzad = 0,arrayLength = 0; i<array.length;i++){
             let firstNumber = false;
             for(let up = 1; up<=array.length; up++){
-                console.log("f= ",array[i],"up= ",up);
+                //console.log("f= ",array[i],"up= ",up);
                 if(array[i] === up){
                     if(!firstNumber){
                         saveNumber = i+1;
-                        //console.log("saveNumber",saveNumber);
                         iloczynyRozlaczneArray.push([]);
                         iloczynyRozlaczneArray[rzad].push(i+1);
                         firstNumber = true;
@@ -191,14 +189,94 @@ function doButton(){
         }
         return iloczynyRozlaczneArray
     }
+
+    let obliczRzadElementow = (array) =>{
+        let iloczynyRozlaczneArray = [];
+        let saveNumber = 0;
+        for(let i = 0,rzad = 0,arrayLength = 0; i<array.length;i++){
+            let firstNumber = false;
+            for(let up = 1; up<=array.length; up++){
+                //console.log("f= ",array[i],"up= ",up);
+                if(array[i] === up){
+                    if(!firstNumber){
+                        saveNumber = i+1;
+                        iloczynyRozlaczneArray.push([]);
+                        iloczynyRozlaczneArray[rzad].push(i+1);
+                        firstNumber = true;
+                    }
+                    i = array[i]-1;
+                    up = 0;
+                    iloczynyRozlaczneArray[rzad].push(i+1);
+                    if(i+1 === saveNumber){
+                        iloczynyRozlaczneArray[rzad].pop();
+                        // found index that wasn't use 
+                        //znajdź daną liczbe przez filtr jesli nie to weź ten index jutro 27.07.22
+                        let iloczynyRozlaczneArray1d = [].concat(...iloczynyRozlaczneArray);
+                        for(let g = 0; g<array.length; g++){
+                            //for(let k = 0; k<iloczynyRozlaczneArray.length; k++){
+                            const foundNumber = (element) => element === array[g];
+                            if(!iloczynyRozlaczneArray1d.some(foundNumber)){
+                                i = g;
+                                up = g+1;
+                                g = array.length;
+                                firstNumber = false;
+                            }
+                        }
+                        arrayLength += iloczynyRozlaczneArray[rzad].length;
+                        if(arrayLength === array.length){
+                            i = array.length+1;
+                            up = array.length+1;
+                        }
+                        rzad++;
+                    }
+                }
+            }
+        }
+        let NWW = [15,6,10];
+        let NWWTimes = [1,1,1];
+        for(let i = 0; i<iloczynyRozlaczneArray.length; i++){
+            NWW[i] = iloczynyRozlaczneArray[i].length;
+            NWWTimes.push(1);
+        }
+        const NWWCopy = [...NWW];
+        const functionNWW = (arr) => arr.every(v => v === arr[0]);
+        let indexL = 0;
+        let indexR = 1;
+        while(!functionNWW(NWW)){
+            if(NWW[indexL] > NWW[indexR]){
+                NWWTimes[indexR]++
+                NWW[indexR] = NWWCopy[indexR]*NWWTimes[indexR];
+            }else if(NWW[indexL] < NWW[indexR]){
+                NWWTimes[indexL]++;
+                NWW[indexL] = NWWCopy[indexL]*NWWTimes[indexL];
+            }else if(NWW[indexL] === NWW[indexR]){
+                indexL++;
+                indexR++;
+                if(NWW.length === indexR){
+                    indexL = 0;
+                    indexR = 1;
+                }
+            }
+        }
+        return NWW;
+    }
                 
     function wynik(){
         console.log(obliczaniePotegiJeden(utworzArray()));
+    }
+    function wynikRzadElementow(){
+        console.log(obliczRzadElementow(utworzArray()));
     }
     let obliczFunkcja = () =>{
         let obliczExist = document.getElementById("oblicz");
         if(obliczExist != null)
         oblicz.addEventListener("click",wynik);
+    }
+
+    let wywolanieRzadElementow = () =>{
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynikRzadElementow );
     }
                 
     if(iloczynyRozlaczne !== null){
@@ -209,7 +287,7 @@ function doButton(){
     if(rzedyElementow !== null){
         rzedyElementow.addEventListener("click",utworzArray);        
         rzedyElementow.addEventListener("click",utworzInputOblicz);     
-        rzedyElementow.addEventListener("click",obliczFunkcja);  
+        rzedyElementow.addEventListener("click",wywolanieRzadElementow);  
     }
     if(fg !== null){
         fg.addEventListener("click",utworzArray);        
