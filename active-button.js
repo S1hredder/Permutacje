@@ -67,8 +67,6 @@ function click_button_f(){
         }
     }
 }
-
-
 function click_button_g(){
     
     const textNodeArray = ["iloczny rozłaczne","rzędy elementów","znak permutacji"]
@@ -129,7 +127,6 @@ function click_button_g(){
         }
     }
 }
-
 function click_button_gf(){
     
     const textNodeArray = ["iloczny rozłaczne","rzędy elementów","znak permutacji"]
@@ -325,6 +322,7 @@ function doButtonF(){
             iloczynArray.push([]);
             do{
                 iloczynArray[i].push(array[index]);
+                //console.log("push",firstNumber,array[index]);
                 if(firstNumber !== array[index]){
                     index = array[index]-1;
                     //console.log(index);
@@ -336,13 +334,15 @@ function doButtonF(){
                 }
             //console.log(iloczynArray);
             let iloczynArray1D = [].concat(...iloczynArray);
-            //console.log(iloczynArray1D.length);
+            //console.log("length",iloczynArray1D.length,array);
             for(let g = 0; g<array.length; g++){
                 for(let j = 0; j<iloczynArray1D.length; j++){
                     if(array[g] !== iloczynArray1D[j]){
                         countNumber++;
+                        console.log(array[g],iloczynArray1D[j],countNumber);
                     }
                     if(array[g] === iloczynArray1D[j]){
+                        //console.log(array[g],iloczynArray1D[j],countNumber);
                         countNumber = 0;
                         break;
                     }
@@ -350,7 +350,9 @@ function doButtonF(){
                         firstNumber = g+1;
                         //console.log("wynik",firstNumber);
                         index = g;
+                        //console.log("brak",firstNumber,index);
                         g = array.length;
+                        countNumber = 0;
                     }
                 }
             }
@@ -362,47 +364,8 @@ function doButtonF(){
     }
 
     let obliczRzadElementow = (array) =>{
-        let iloczynyRozlaczneArray = [];
-        let saveNumber = 0;
-        for(let i = 0,rzad = 0,arrayLength = 0; i<array.length;i++){
-            let firstNumber = false;
-            for(let up = 1; up<=array.length; up++){
-                //console.log("f= ",array[i],"up= ",up);
-                if(array[i] === up){
-                    if(!firstNumber){
-                        saveNumber = i+1;
-                        iloczynyRozlaczneArray.push([]);
-                        iloczynyRozlaczneArray[rzad].push(i+1);
-                        firstNumber = true;
-                    }
-                    i = array[i]-1;
-                    up = 0;
-                    iloczynyRozlaczneArray[rzad].push(i+1);
-                    if(i+1 === saveNumber){
-                        iloczynyRozlaczneArray[rzad].pop();
-                        // found index that wasn't use 
-                        //znajdź daną liczbe przez filtr jesli nie to weź ten index jutro 27.07.22
-                        let iloczynyRozlaczneArray1d = [].concat(...iloczynyRozlaczneArray);
-                        for(let g = 0; g<array.length; g++){
-                            //for(let k = 0; k<iloczynyRozlaczneArray.length; k++){
-                            const foundNumber = (element) => element === array[g];
-                            if(!iloczynyRozlaczneArray1d.some(foundNumber)){
-                                i = g;
-                                up = g+1;
-                                g = array.length;
-                                firstNumber = false;
-                            }
-                        }
-                        arrayLength += iloczynyRozlaczneArray[rzad].length;
-                        if(arrayLength === array.length){
-                            i = array.length+1;
-                            up = array.length+1;
-                        }
-                        rzad++;
-                    }
-                }
-            }
-        }
+        let iloczynyRozlaczneArray = obliczaniePotegiJeden(array);
+        //console.log(iloczynyRozlaczneArray);
         let NWW = [];
         let NWWTimes = [];
         for(let i = 0; i<iloczynyRozlaczneArray.length; i++){
@@ -431,12 +394,40 @@ function doButtonF(){
         }
         return NWW;
     }
+
+    let sgn = (array,potega) =>{
+        let rzad = obliczRzadElementow(array);
+        let znaki = [];
+        //nieparzyste to +1 parzyste -1
+        console.log("to?",rzad); 
+        for(let i = 0; i<rzad.length; i++){
+            if(rzad[i] % 2 === 0){
+                znaki.push(-1);
+            }else {
+                znaki.push(1);   
+            }
+        }
+        let znak = znaki.reduce(
+            (previousValue, currentValue) => previousValue * currentValue);
+            znak = Math.pow(znak,potega);
+        return znak
+    };
                 
     function wynik(){
         console.log(obliczaniePotegiJeden(utworzArray()));
     }
     function wynikRzadElementow(){
         console.log(obliczRzadElementow(utworzArray()));
+    }
+    function wynikSgn(){
+        let potega = document.getElementById("liczba").value;
+        console.log(sgn(utworzArray(),potega));
+    }
+
+    function wywolanieSgn(){
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynikSgn);
     }
     let obliczFunkcja = () =>{
         let obliczExist = document.getElementById("oblicz");
@@ -463,7 +454,7 @@ function doButtonF(){
     if(znakPermutacji !== null){
         znakPermutacji.addEventListener("click",utworzArray);        
         znakPermutacji.addEventListener("click",utworzInputOblicz);     
-        znakPermutacji.addEventListener("click",obliczFunkcja);  
+        znakPermutacji.addEventListener("click",wywolanieSgn);  
     }  
 
 }
@@ -530,7 +521,7 @@ function doButtonG(){
 
     let utworzArray =() =>{
         let fArray = [];
-        for(let i = 1; i<11; i++){
+        for(let i = 1; i<10; i++){
             fArray.push(parseInt(document.getElementById("g"+i).value));
         }
         return fArray;
@@ -572,6 +563,8 @@ function doButtonG(){
                         //console.log("wynik",firstNumber);
                         index = g;
                         g = array.length;
+                        countNumber = 0;
+
                     }
                 }
             }
@@ -583,47 +576,8 @@ function doButtonG(){
     }
 
     let obliczRzadElementow = (array) =>{
-        let iloczynyRozlaczneArray = [];
-        let saveNumber = 0;
-        for(let i = 0,rzad = 0,arrayLength = 0; i<array.length;i++){
-            let firstNumber = false;
-            for(let up = 1; up<=array.length; up++){
-                //console.log("f= ",array[i],"up= ",up);
-                if(array[i] === up){
-                    if(!firstNumber){
-                        saveNumber = i+1;
-                        iloczynyRozlaczneArray.push([]);
-                        iloczynyRozlaczneArray[rzad].push(i+1);
-                        firstNumber = true;
-                    }
-                    i = array[i]-1;
-                    up = 0;
-                    iloczynyRozlaczneArray[rzad].push(i+1);
-                    if(i+1 === saveNumber){
-                        iloczynyRozlaczneArray[rzad].pop();
-                        // found index that wasn't use 
-                        //znajdź daną liczbe przez filtr jesli nie to weź ten index jutro 27.07.22
-                        let iloczynyRozlaczneArray1d = [].concat(...iloczynyRozlaczneArray);
-                        for(let g = 0; g<array.length; g++){
-                            //for(let k = 0; k<iloczynyRozlaczneArray.length; k++){
-                            const foundNumber = (element) => element === array[g];
-                            if(!iloczynyRozlaczneArray1d.some(foundNumber)){
-                                i = g;
-                                up = g+1;
-                                g = array.length;
-                                firstNumber = false;
-                            }
-                        }
-                        arrayLength += iloczynyRozlaczneArray[rzad].length;
-                        if(arrayLength === array.length){
-                            i = array.length+1;
-                            up = array.length+1;
-                        }
-                        rzad++;
-                    }
-                }
-            }
-        }
+        let iloczynyRozlaczneArray = obliczaniePotegiJeden(array);
+        //console.log(iloczynyRozlaczneArray);
         let NWW = [];
         let NWWTimes = [];
         for(let i = 0; i<iloczynyRozlaczneArray.length; i++){
@@ -652,6 +606,25 @@ function doButtonG(){
         }
         return NWW;
     }
+
+    
+    let sgn = (array,potega) =>{
+        let rzad = obliczRzadElementow(array);
+        let znaki = [];
+        //nieparzyste to +1 parzyste -1
+        console.log("to?",rzad); 
+        for(let i = 0; i<rzad.length; i++){
+            if(rzad[i] % 2 === 0){
+                znaki.push(-1);
+            }else {
+                znaki.push(1);   
+            }
+        }
+        let znak = znaki.reduce(
+            (previousValue, currentValue) => previousValue * currentValue);
+            znak = Math.pow(znak,potega);
+        return znak
+    };
                 
     function wynik(){
         console.log(obliczaniePotegiJeden(utworzArray()));
@@ -670,6 +643,16 @@ function doButtonG(){
         if(obliczExist != null)
         oblicz.addEventListener("click",wynikRzadElementow );
     }
+    function wynikSgn(){
+        let potega = document.getElementById("liczba").value;
+        console.log(sgn(utworzArray(),potega));
+    }
+
+    function wywolanieSgn(){
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynikSgn);
+    }
                 
     if(iloczynyRozlaczne !== null){
         iloczynyRozlaczne.addEventListener("click",utworzInputOblicz);
@@ -684,7 +667,7 @@ function doButtonG(){
     if(znakPermutacji !== null){
         znakPermutacji.addEventListener("click",utworzArray);        
         znakPermutacji.addEventListener("click",utworzInputOblicz);     
-        znakPermutacji.addEventListener("click",obliczFunkcja);  
+        znakPermutacji.addEventListener("click",wywolanieSgn);  
     }  
 
 }
@@ -765,7 +748,7 @@ function doButtonGF(){
             index = fArray[i]-1;
             array[i] = gArray[index]; 
         }
-        console.log(array);
+        //console.log(array);
         return array;
     }
     
@@ -805,6 +788,8 @@ function doButtonGF(){
                         //console.log("wynik",firstNumber);
                         index = g;
                         g = array.length;
+                        countNumber = 0;
+
                     }
                 }
             }
@@ -816,47 +801,8 @@ function doButtonGF(){
     }
 
     let obliczRzadElementow = (array) =>{
-        let iloczynyRozlaczneArray = [];
-        let saveNumber = 0;
-        for(let i = 0,rzad = 0,arrayLength = 0; i<array.length;i++){
-            let firstNumber = false;
-            for(let up = 1; up<=array.length; up++){
-                console.log("f= ",array[i],"up= ",up);
-                if(array[i] === up){
-                    if(!firstNumber){
-                        saveNumber = i+1;
-                        iloczynyRozlaczneArray.push([]);
-                        iloczynyRozlaczneArray[rzad].push(i+1);
-                        firstNumber = true;
-                    }
-                    i = array[i]-1;
-                    up = 0;
-                    iloczynyRozlaczneArray[rzad].push(i+1);
-                    if(i+1 === saveNumber){
-                        iloczynyRozlaczneArray[rzad].pop();
-                        // found index that wasn't use 
-                        //znajdź daną liczbe przez filtr jesli nie to weź ten index jutro 27.07.22
-                        let iloczynyRozlaczneArray1d = [].concat(...iloczynyRozlaczneArray);
-                        for(let g = 0; g<array.length; g++){
-                            //for(let k = 0; k<iloczynyRozlaczneArray.length; k++){
-                            const foundNumber = (element) => element === array[g];
-                            if(!iloczynyRozlaczneArray1d.some(foundNumber)){
-                                i = g;
-                                up = g+1;
-                                g = array.length;
-                                firstNumber = false;
-                            }
-                        }
-                        arrayLength += iloczynyRozlaczneArray[rzad].length;
-                        if(arrayLength === array.length){
-                            i = array.length+1;
-                            up = array.length+1;
-                        }
-                        rzad++;
-                    }
-                }
-            }
-        }
+        let iloczynyRozlaczneArray = obliczaniePotegiJeden(array);
+        //console.log(iloczynyRozlaczneArray);
         let NWW = [];
         let NWWTimes = [];
         for(let i = 0; i<iloczynyRozlaczneArray.length; i++){
@@ -885,6 +831,24 @@ function doButtonGF(){
         }
         return NWW;
     }
+
+    let sgn = (array,potega) =>{
+        let rzad = obliczRzadElementow(array);
+        let znaki = [];
+        //nieparzyste to +1 parzyste -1
+        console.log("to?",rzad); 
+        for(let i = 0; i<rzad.length; i++){
+            if(rzad[i] % 2 === 0){
+                znaki.push(-1);
+            }else {
+                znaki.push(1);   
+            }
+        }
+        let znak = znaki.reduce(
+            (previousValue, currentValue) => previousValue * currentValue);
+            znak = Math.pow(znak,potega);
+        return znak
+    };
                 
     function wynik(){
         console.log(obliczaniePotegiJeden(utworzArray()));
@@ -903,6 +867,17 @@ function doButtonGF(){
         if(obliczExist != null)
         oblicz.addEventListener("click",wynikRzadElementow );
     }
+
+    function wynikSgn(){
+        let potega = document.getElementById("liczba").value;
+        console.log(sgn(utworzArray(),potega));
+    }
+
+    function wywolanieSgn(){
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynikSgn);
+    }
                 
     if(iloczynyRozlaczne !== null){
         iloczynyRozlaczne.addEventListener("click",utworzInputOblicz);
@@ -917,8 +892,231 @@ function doButtonGF(){
     if(znakPermutacji !== null){
         znakPermutacji.addEventListener("click",utworzArray);        
         znakPermutacji.addEventListener("click",utworzInputOblicz);     
-        znakPermutacji.addEventListener("click",obliczFunkcja);  
+        znakPermutacji.addEventListener("click",wywolanieSgn);  
     }  
 
 }
 gf_button.addEventListener("click",doButtonGF);
+
+function doButtonFG(){
+    const iloczynyRozlaczne = document.getElementById("buttonFG0");
+    const rzedyElementow = document.getElementById("buttonFG1");
+    const znakPermutacji = document.getElementById("buttonFG2");
+    let count = 0;
+    let countG = [0,0,0,0];
+
+    function utworzInputOblicz(elem){
+        if(count > 0){
+            let divObliczenia = document.getElementById("divObliczenia");
+            divObliczenia.parentNode.removeChild(divObliczenia);
+            count = 0;
+        }
+        const createDiv = document.createElement("div");
+        createDiv.setAttribute("id","divObliczenia");
+        document.getElementById("inputWynik").appendChild(createDiv);
+        for(let i = 0; i<3; i++){            
+            let elementRemove = document.getElementById("buttonFG"+i);
+            elementRemove.classList.remove("activ");
+            if(elem.currentTarget.id === "buttonFG"+i){
+                count++;
+                document.getElementById("buttonFG"+i).classList.add("activ");
+                //create div
+                //create input
+                const createIlocznynyRozlaczne = document.createElement("input");
+                createIlocznynyRozlaczne.setAttribute("type","text");
+                createIlocznynyRozlaczne.setAttribute("id","liczba");
+                createIlocznynyRozlaczne.setAttribute("placeholder","Potęga");
+                document.getElementById("divObliczenia").appendChild(createIlocznynyRozlaczne);
+                //create Button
+                const createButtonAccept = document.createElement("button");
+                const textButton = document.createTextNode("Oblicz");
+                createButtonAccept.appendChild(textButton);
+                createButtonAccept.setAttribute("id","oblicz");
+                document.getElementById("divObliczenia").appendChild(createButtonAccept);
+                //off button if click twice 
+                countG[i]++;
+                let filter = countG.filter(element => element === 1);
+                if(filter.length > 1){
+                    countG.forEach(function(part,index){
+                        this[index] = 0;
+                    },countG);
+                    countG[i]++;
+                }
+                if(countG[i] > 1){
+                    elementRemove.classList.remove("activ");
+                    countG.forEach(function(part,index){
+                        this[index] = 0;
+                    },countG);
+                    let divObliczenia = document.getElementById("divObliczenia");
+                    divObliczenia.parentNode.removeChild(divObliczenia);
+                    count = 0;
+                }
+            }
+        }
+
+
+    }
+
+    let utworzArray =() =>{
+        //dwa razy się wywołuje?
+        let fArray = [];
+        let gArray = [];
+        let array = [];
+        for(let i = 1; i<11; i++){
+            fArray.push(parseInt(document.getElementById("f"+i).value));
+        }
+        for(let i = 1; i<11; i++){
+            gArray.push(parseInt(document.getElementById("g"+i).value));
+        }
+        let index = 0;
+        for(let i = 0; i<fArray.length; i++){
+            index = gArray[i]-1;
+            array[i] = fArray[index]; 
+        }
+        //console.log(array);
+        return array;
+    }
+    
+    let obliczaniePotegiJeden = (array) =>{
+        let iloczynArray = [];
+        let firstNumber = 1;
+        let index = 0;
+        let countNumber = 0;
+        ///found number 
+        for(let i = 0; i<array.length; i++){
+            iloczynArray.push([]);
+            do{
+                iloczynArray[i].push(array[index]);
+                if(firstNumber !== array[index]){
+                    index = array[index]-1;
+                    //console.log(index);
+                }
+            }while(firstNumber !== array[index])
+                iloczynArray[i].unshift(firstNumber);
+                if(iloczynArray[i][0] === iloczynArray[i][1]){
+                    iloczynArray[i].shift(firstNumber);
+                }
+            //console.log(iloczynArray);
+            let iloczynArray1D = [].concat(...iloczynArray);
+            //console.log(iloczynArray1D.length);
+            for(let g = 0; g<array.length; g++){
+                for(let j = 0; j<iloczynArray1D.length; j++){
+                    if(array[g] !== iloczynArray1D[j]){
+                        countNumber++;
+                    }
+                    if(array[g] === iloczynArray1D[j]){
+                        countNumber = 0;
+                        break;
+                    }
+                    if(countNumber === iloczynArray1D.length){
+                        firstNumber = g+1;
+                        //console.log("wynik",firstNumber);
+                        index = g;
+                        g = array.length;
+                        countNumber = 0;
+                    }
+                }
+            }
+            if(iloczynArray1D.length >= array.length){
+                i = array.length;
+            }
+        }
+        return iloczynArray
+    }
+
+    let obliczRzadElementow = (array) =>{
+        let iloczynyRozlaczneArray = obliczaniePotegiJeden(array);
+        //console.log(iloczynyRozlaczneArray);
+        let NWW = [];
+        let NWWTimes = [];
+        for(let i = 0; i<iloczynyRozlaczneArray.length; i++){
+            NWW[i] = iloczynyRozlaczneArray[i].length;
+            NWWTimes.push(1);
+        }
+        const NWWCopy = [...NWW];
+        const functionNWW = (arr) => arr.every(v => v === arr[0]);
+        let indexL = 0;
+        let indexR = 1;
+        while(!functionNWW(NWW)){
+            if(NWW[indexL] > NWW[indexR]){
+                NWWTimes[indexR]++
+                NWW[indexR] = NWWCopy[indexR]*NWWTimes[indexR];
+            }else if(NWW[indexL] < NWW[indexR]){
+                NWWTimes[indexL]++;
+                NWW[indexL] = NWWCopy[indexL]*NWWTimes[indexL];
+            }else if(NWW[indexL] === NWW[indexR]){
+                indexL++;
+                indexR++;
+                if(NWW.length === indexR){
+                    indexL = 0;
+                    indexR = 1;
+                }
+            }
+        }
+        return NWW;
+    }
+    
+    let sgn = (array,potega) =>{
+        let rzad = obliczRzadElementow(array);
+        let znaki = [];
+        //nieparzyste to +1 parzyste -1
+        console.log("to?",rzad); 
+        for(let i = 0; i<rzad.length; i++){
+            if(rzad[i] % 2 === 0){
+                znaki.push(-1);
+            }else {
+                znaki.push(1);   
+            }
+        }
+        let znak = znaki.reduce(
+            (previousValue, currentValue) => previousValue * currentValue);
+            znak = Math.pow(znak,potega);
+        return znak
+    };
+                
+    function wynik(){
+        console.log(obliczaniePotegiJeden(utworzArray()));
+    }
+    function wynikRzadElementow(){
+        console.log(obliczRzadElementow(utworzArray()));
+    }
+    let obliczFunkcja = () =>{
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynik);
+    }
+
+    let wywolanieRzadElementow = () =>{
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynikRzadElementow );
+    }
+    function wynikSgn(){
+        let potega = document.getElementById("liczba").value;
+        console.log(sgn(utworzArray(),potega));
+    }
+
+    function wywolanieSgn(){
+        let obliczExist = document.getElementById("oblicz");
+        if(obliczExist != null)
+        oblicz.addEventListener("click",wynikSgn);
+    }
+                
+    if(iloczynyRozlaczne !== null){
+        iloczynyRozlaczne.addEventListener("click",utworzInputOblicz);
+        iloczynyRozlaczne.addEventListener("click",utworzArray);        
+        iloczynyRozlaczne.addEventListener("click",obliczFunkcja);      
+    }
+    if(rzedyElementow !== null){
+        rzedyElementow.addEventListener("click",utworzArray);        
+        rzedyElementow.addEventListener("click",utworzInputOblicz);     
+        rzedyElementow.addEventListener("click",wywolanieRzadElementow);  
+    }
+    if(znakPermutacji !== null){
+        znakPermutacji.addEventListener("click",utworzArray);        
+        znakPermutacji.addEventListener("click",utworzInputOblicz);     
+        znakPermutacji.addEventListener("click",wywolanieSgn);  
+    }  
+
+}
+fg_button.addEventListener("click",doButtonFG);
