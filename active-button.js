@@ -311,7 +311,6 @@ function doButtonF(){
         }
         return fArray;
     }
-    
     let obliczaniePotegiJeden = (array) =>{
         let iloczynArray = [];
         let firstNumber = 1;
@@ -521,13 +520,14 @@ function doButtonG(){
 
     let utworzArray =() =>{
         let fArray = [];
-        for(let i = 1; i<10; i++){
+        for(let i = 1; i<11; i++){
             fArray.push(parseInt(document.getElementById("g"+i).value));
         }
         return fArray;
     }
     
-    let obliczaniePotegiJeden = (array) =>{
+    let obliczaniePotegiJeden = (array,potega) =>{
+        console.log(potega);
         let iloczynArray = [];
         let firstNumber = 1;
         let index = 0;
@@ -572,6 +572,34 @@ function doButtonG(){
                 i = array.length;
             }
         }
+        let iloczynArrayDlgPoj = [];
+        for(let i = 0; i<iloczynArray.length; i++){
+            iloczynArrayDlgPoj.push(iloczynArray[i].length);
+        }
+        let moduloArray = [];
+        for(let i = 0; i<iloczynArrayDlgPoj.length; i++){
+            let obliczenia = potega % iloczynArrayDlgPoj[i];
+            moduloArray.push(obliczenia);
+        }
+        console.log(moduloArray);
+        console.log(iloczynArrayDlgPoj,iloczynArray);
+        let iloczynArrayPotega = [];
+        for(let i = 0; i <iloczynArray.length; i++){
+            iloczynArrayPotega.push([]);
+            for(let j = 0; j<iloczynArrayDlgPoj[i];j++){
+                let indexIloczyn = iloczynArray[i][j]-1;
+                let element = array[indexIloczyn];
+                console.log(indexIloczyn,element);
+                console.log("iloczynArrayDlgPoj",moduloArray[i]);
+                for(let k = 0; k<moduloArray[i]-1; k++){
+                    indexIloczyn = element;
+                    element = array[indexIloczyn-1];
+                }
+                iloczynArrayPotega[i].push(element);
+                console.log("zapisz",indexIloczyn,element);
+            }
+        }
+        console.log(iloczynArrayPotega);
         return iloczynArray
     }
 
@@ -627,7 +655,8 @@ function doButtonG(){
     };
                 
     function wynik(){
-        console.log(obliczaniePotegiJeden(utworzArray()));
+        let potega = document.getElementById("liczba").value;
+        console.log(obliczaniePotegiJeden(utworzArray(),potega));
     }
     function wynikRzadElementow(){
         console.log(obliczRzadElementow(utworzArray()));
