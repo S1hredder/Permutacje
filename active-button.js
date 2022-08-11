@@ -581,26 +581,78 @@ function doButtonG(){
             let obliczenia = potega % iloczynArrayDlgPoj[i];
             moduloArray.push(obliczenia);
         }
-        console.log(moduloArray);
-        console.log(iloczynArrayDlgPoj,iloczynArray);
+        console.log("moduloArray",moduloArray);
+        console.log(iloczynArrayDlgPoj);
+        console.log(iloczynArray);
         let iloczynArrayPotega = [];
+        let iloczynArrayPotega1d = [];
+        let littleArray = [];
         for(let i = 0; i <iloczynArray.length; i++){
+            let indexInput = 0;
+            iloczynArrayPotega.push([]);
+            console.log("test");
+            for(let j = 0; j<iloczynArray[i].length; j++){
+                let element = iloczynArray[i][indexInput];
+                console.log("start",element,indexInput);
+                indexInput += moduloArray[i];
+                iloczynArrayPotega1d.push(element);
+                littleArray.push(element);
+                console.log("element",element);
+                if(indexInput >= iloczynArray[i].length){
+                    let lastIndexElement = indexInput-moduloArray[i];
+                    let obliczeniaIndex = (moduloArray[i] - ( (iloczynArray[i].length-1) -lastIndexElement) )-1;
+                    //console.log("lastIndexElement", (moduloArray[i]- ( (iloczynArray[i].length-1) -lastIndexElement) ) );
+                    indexInput = obliczeniaIndex;
+                    // found the same number
+                    element = iloczynArray[i][indexInput];
+                    let sameNumber = iloczynArrayPotega1d.filter(elem => elem === element);
+                    let k  = 0;
+                    if(Boolean(sameNumber.length)){
+                        iloczynArrayPotega[i].push(littleArray);
+                        littleArray = []
+                    }
+                    while(Boolean(sameNumber.length)){
+                        element = iloczynArray[i][k];
+                        sameNumber = iloczynArrayPotega1d.filter(elem => elem === element);
+                        //console.log("element!!!",Boolean(sameNumber.length),sameNumber,element,k);
+                        indexInput = k;
+                        k++;
+                    }
+                    console.log("sameNumber",sameNumber);
+                    //element = iloczynArray[i][obliczeniaIndex];
+                }
+                console.log(element);
+                //console.log("element",element);
+            }
+            iloczynArrayPotega[i].push(littleArray);
+            littleArray = []
+            /*
             iloczynArrayPotega.push([]);
             for(let j = 0; j<iloczynArrayDlgPoj[i];j++){
                 let indexIloczyn = iloczynArray[i][j]-1;
                 let element = array[indexIloczyn];
                 console.log(indexIloczyn,element);
                 console.log("iloczynArrayDlgPoj",moduloArray[i]);
-                for(let k = 0; k<moduloArray[i]-1; k++){
-                    indexIloczyn = element;
-                    element = array[indexIloczyn-1];
+                if( moduloArray[i] === 0 || moduloArray[i] === 1){
+                    console.log("element",iloczynArray[i]);
+                    //iloczynArrayPotega.shift();
+                    console.log(iloczynArrayPotega,iloczynArray[i]);
+                    iloczynArrayPotega[i].push(iloczynArray[i]);
+                    break;
+                }else {
+                    //iloczynArrayPotega.push([]);
+                    for(let k = 0; k<moduloArray[i]-1; k++){
+                        indexIloczyn = element;
+                        element = array[indexIloczyn-1];
+                    }
+                    iloczynArrayPotega[i].push(element);
                 }
-                iloczynArrayPotega[i].push(element);
                 console.log("zapisz",indexIloczyn,element);
             }
+            */
         }
         console.log(iloczynArrayPotega);
-        return iloczynArray
+        return iloczynArrayPotega
     }
 
     let obliczRzadElementow = (array) =>{
@@ -656,7 +708,23 @@ function doButtonG(){
                 
     function wynik(){
         let potega = document.getElementById("liczba").value;
-        console.log(obliczaniePotegiJeden(utworzArray(),potega));
+        const wynikInput = obliczaniePotegiJeden(utworzArray(),potega);
+        let wynikString ="";
+        console.log(wynikInput.length);
+        for(let i = 0; i<wynikInput.length; i++){
+            for(let j = 0; j<wynikInput[i].length; j++){
+                if(wynikInput[i][j].length !== 0){
+                    wynikString += "("+wynikInput[i][j].toString()+")";
+                }
+            }
+        }
+        const createWynik = document.createElement("p");
+        const createWynikNode = document.createTextNode(wynikString);
+        createWynik.appendChild(createWynikNode);
+        const wynik = document.getElementById("wynik");
+        wynik.appendChild(createWynik);
+
+        //console.log(obliczaniePotegiJeden(utworzArray(),potega));
     }
     function wynikRzadElementow(){
         console.log(obliczRzadElementow(utworzArray()));
