@@ -88,3 +88,12 @@ input[type=number]{
     justify-content: center;
 }
 
+#wynik {
+  display:flex;
+}
+#wynik_liczby{
+  font-size: 25px;
+}
+.test {
+  width:30%;
+}
